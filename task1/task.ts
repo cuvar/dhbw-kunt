@@ -18,15 +18,21 @@ function insertBitBeforePos(
 
 function getPositionsToCheck(pos: number): number[] {
   let result: number[] = [];
-  pos += 1;
   for (let i: number = 1; i < LENGTH + 1; i++) {
-    if (bitStringEndsWithBitString(i.toString(2), pos.toString(2))) {
-      if (pos != i) {
+    if (i > pos && checkPosition(i, pos)) {
+      if (pos != i - 1) {
         result.push(i - 1);
       }
     }
   }
   return result;
+}
+
+function checkPosition(i: number, pos: number) {
+  let str: string = i.toString(2);
+  let index = Math.log2(pos + 1);
+  let val = str[str.length - index - 1];
+  return val == "1";
 }
 
 function checkForParity(bitstring: string, pos: number): number {
@@ -42,16 +48,6 @@ function checkForParity(bitstring: string, pos: number): number {
 function setCharAt(str: string, index: number, chr: string) {
   if (index > str.length - 1) return str;
   return str.substr(0, index) + chr + str.substr(index + 1);
-}
-
-function bitStringEndsWithBitString(
-  bitstring: string,
-  bitstringToFind: string
-): boolean {
-  return (
-    bitstring.substr(bitstring.length - bitstringToFind.length) ==
-    bitstringToFind
-  );
 }
 
 function hammingEncode74(bitstring: string): string {
